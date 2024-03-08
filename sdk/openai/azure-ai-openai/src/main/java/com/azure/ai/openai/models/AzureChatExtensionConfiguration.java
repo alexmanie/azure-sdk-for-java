@@ -5,34 +5,86 @@ package com.azure.ai.openai.models;
 
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonSerializable;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
 /**
  * A representation of configuration data for a single Azure OpenAI chat extension. This will be used by a chat
  * completions request that should use Azure OpenAI chat extensions to augment the response behavior.
  * The use of this configuration is compatible only with Azure OpenAI.
  */
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,
-    property = "type",
-    defaultImpl = AzureChatExtensionConfiguration.class)
-@JsonTypeName("AzureChatExtensionConfiguration")
-@JsonSubTypes({
-    @JsonSubTypes.Type(name = "azure_search", value = AzureSearchChatExtensionConfiguration.class),
-    @JsonSubTypes.Type(name = "azure_ml_index", value = AzureMachineLearningIndexChatExtensionConfiguration.class),
-    @JsonSubTypes.Type(name = "azure_cosmos_db", value = AzureCosmosDBChatExtensionConfiguration.class),
-    @JsonSubTypes.Type(name = "elasticsearch", value = ElasticsearchChatExtensionConfiguration.class),
-    @JsonSubTypes.Type(name = "pinecone", value = PineconeChatExtensionConfiguration.class) })
 @Immutable
-public class AzureChatExtensionConfiguration {
+public class AzureChatExtensionConfiguration implements JsonSerializable<AzureChatExtensionConfiguration> {
 
     /**
      * Creates an instance of AzureChatExtensionConfiguration class.
      */
     @Generated
     public AzureChatExtensionConfiguration() {
+    }
+
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of AzureChatExtensionConfiguration from the JsonReader.
+     *
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of AzureChatExtensionConfiguration if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing the polymorphic discriminator.
+     * @throws IOException If an error occurs while reading the AzureChatExtensionConfiguration.
+     */
+    public static AzureChatExtensionConfiguration fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            String discriminatorValue = null;
+            try (JsonReader readerToUse = reader.bufferObject()) {
+                // Prepare for reading
+                readerToUse.nextToken();
+                while (readerToUse.nextToken() != JsonToken.END_OBJECT) {
+                    String fieldName = readerToUse.getFieldName();
+                    readerToUse.nextToken();
+                    if ("type".equals(fieldName)) {
+                        discriminatorValue = readerToUse.getString();
+                        break;
+                    } else {
+                        readerToUse.skipChildren();
+                    }
+                }
+                // Use the discriminator value to determine which subtype should be deserialized.
+                if ("azure_search".equals(discriminatorValue)) {
+                    return AzureSearchChatExtensionConfiguration.fromJson(readerToUse.reset());
+                } else if ("azure_ml_index".equals(discriminatorValue)) {
+                    return AzureMachineLearningIndexChatExtensionConfiguration.fromJson(readerToUse.reset());
+                } else if ("azure_cosmos_db".equals(discriminatorValue)) {
+                    return AzureCosmosDBChatExtensionConfiguration.fromJson(readerToUse.reset());
+                } else if ("elasticsearch".equals(discriminatorValue)) {
+                    return ElasticsearchChatExtensionConfiguration.fromJson(readerToUse.reset());
+                } else if ("pinecone".equals(discriminatorValue)) {
+                    return PineconeChatExtensionConfiguration.fromJson(readerToUse.reset());
+                } else {
+                    return fromJsonKnownDiscriminator(readerToUse.reset());
+                }
+            }
+        });
+    }
+
+    static AzureChatExtensionConfiguration fromJsonKnownDiscriminator(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            AzureChatExtensionConfiguration deserializedAzureChatExtensionConfiguration
+                = new AzureChatExtensionConfiguration();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+                reader.skipChildren();
+            }
+            return deserializedAzureChatExtensionConfiguration;
+        });
     }
 }

@@ -997,6 +997,7 @@ public final class OpenAIClientImpl {
      * {
      *     messages (Required): [
      *          (Required){
+     *             role: String (Optional)
      *         }
      *     ]
      *     functions (Optional): [
@@ -1024,6 +1025,7 @@ public final class OpenAIClientImpl {
      *     model: String (Optional)
      *     data_sources (Optional): [
      *          (Optional){
+     *             type: String (Optional)
      *         }
      *     ]
      *     enhancements (Optional): {
@@ -1038,9 +1040,11 @@ public final class OpenAIClientImpl {
      *     logprobs: Boolean (Optional)
      *     top_logprobs: Integer (Optional)
      *     response_format (Optional): {
+     *         type: String (Optional)
      *     }
      *     tools (Optional): [
      *          (Optional){
+     *             type: String (Optional)
      *         }
      *     ]
      *     tool_choice: BinaryData (Optional)
@@ -1060,6 +1064,7 @@ public final class OpenAIClientImpl {
      *                 content: String (Required)
      *                 tool_calls (Optional): [
      *                      (Optional){
+     *                         type: String (Optional)
      *                         id: String (Required)
      *                     }
      *                 ]
@@ -1103,6 +1108,7 @@ public final class OpenAIClientImpl {
      *             index: int (Required)
      *             finish_reason: String(stop/length/content_filter/function_call/tool_calls) (Required)
      *             finish_details (Optional): {
+     *                 type: String (Optional)
      *             }
      *             delta (Optional): (recursive schema, see delta above)
      *             content_filter_results (Optional): {
@@ -1227,6 +1233,7 @@ public final class OpenAIClientImpl {
      * {
      *     messages (Required): [
      *          (Required){
+     *             role: String (Optional)
      *         }
      *     ]
      *     functions (Optional): [
@@ -1254,6 +1261,7 @@ public final class OpenAIClientImpl {
      *     model: String (Optional)
      *     data_sources (Optional): [
      *          (Optional){
+     *             type: String (Optional)
      *         }
      *     ]
      *     enhancements (Optional): {
@@ -1268,9 +1276,11 @@ public final class OpenAIClientImpl {
      *     logprobs: Boolean (Optional)
      *     top_logprobs: Integer (Optional)
      *     response_format (Optional): {
+     *         type: String (Optional)
      *     }
      *     tools (Optional): [
      *          (Optional){
+     *             type: String (Optional)
      *         }
      *     ]
      *     tool_choice: BinaryData (Optional)
@@ -1290,6 +1300,7 @@ public final class OpenAIClientImpl {
      *                 content: String (Required)
      *                 tool_calls (Optional): [
      *                      (Optional){
+     *                         type: String (Optional)
      *                         id: String (Required)
      *                     }
      *                 ]
@@ -1333,6 +1344,7 @@ public final class OpenAIClientImpl {
      *             index: int (Required)
      *             finish_reason: String(stop/length/content_filter/function_call/tool_calls) (Required)
      *             finish_details (Optional): {
+     *                 type: String (Optional)
      *             }
      *             delta (Optional): (recursive schema, see delta above)
      *             content_filter_results (Optional): {

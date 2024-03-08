@@ -6,10 +6,12 @@ package com.azure.ai.openai.models;
 import com.azure.core.annotation.Fluent;
 import com.azure.core.annotation.Generated;
 import com.azure.core.util.BinaryData;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,8 +19,6 @@ import java.util.stream.Collectors;
 /**
  * A request chat message representing user input to the assistant.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "role")
-@JsonTypeName("user")
 @Fluent
 public final class ChatRequestUserMessage extends ChatRequestMessage {
 
@@ -26,14 +26,12 @@ public final class ChatRequestUserMessage extends ChatRequestMessage {
      * The contents of the user message, with available input types varying by selected model.
      */
     @Generated
-    @JsonProperty(value = "content")
-    private BinaryData content;
+    private final BinaryData content;
 
     /*
      * An optional name for the participant.
      */
     @Generated
-    @JsonProperty(value = "name")
     private String name;
 
     /**
@@ -104,5 +102,52 @@ public final class ChatRequestUserMessage extends ChatRequestMessage {
     public ChatRequestUserMessage setName(String name) {
         this.name = name;
         return this;
+    }
+
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("role", "user");
+        jsonWriter.writeUntypedField("content", this.content.toObject(Object.class));
+        jsonWriter.writeStringField("name", this.name);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ChatRequestUserMessage from the JsonReader.
+     *
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ChatRequestUserMessage if the JsonReader was pointing to an instance of it, or null if it
+     * was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties or the
+     * polymorphic discriminator.
+     * @throws IOException If an error occurs while reading the ChatRequestUserMessage.
+     */
+    public static ChatRequestUserMessage fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            BinaryData content = null;
+            String name = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+                if ("role".equals(fieldName)) {
+                    String role = reader.getString();
+                    if (!"user".equals(role)) {
+                        throw new IllegalStateException(
+                            "'role' was expected to be non-null and equal to 'user'. The found 'role' was '" + role
+                                + "'.");
+                    }
+                } else if ("content".equals(fieldName)) {
+                    content = reader.getNullable(nonNullReader -> BinaryData.fromObject(nonNullReader.readUntyped()));
+                } else if ("name".equals(fieldName)) {
+                    name = reader.getString();
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            ChatRequestUserMessage deserializedChatRequestUserMessage = new ChatRequestUserMessage(content);
+            deserializedChatRequestUserMessage.name = name;
+            return deserializedChatRequestUserMessage;
+        });
     }
 }

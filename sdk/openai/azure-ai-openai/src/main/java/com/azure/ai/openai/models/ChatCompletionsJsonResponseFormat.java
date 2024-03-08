@@ -5,14 +5,14 @@ package com.azure.ai.openai.models;
 
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
 /**
  * A response format for Chat Completions that restricts responses to emitting valid JSON objects.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("json_object")
 @Immutable
 public final class ChatCompletionsJsonResponseFormat extends ChatCompletionsResponseFormat {
 
@@ -21,5 +21,43 @@ public final class ChatCompletionsJsonResponseFormat extends ChatCompletionsResp
      */
     @Generated
     public ChatCompletionsJsonResponseFormat() {
+    }
+
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("type", "json_object");
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of ChatCompletionsJsonResponseFormat from the JsonReader.
+     *
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of ChatCompletionsJsonResponseFormat if the JsonReader was pointing to an instance of it, or
+     * null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing the polymorphic discriminator.
+     * @throws IOException If an error occurs while reading the ChatCompletionsJsonResponseFormat.
+     */
+    public static ChatCompletionsJsonResponseFormat fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            ChatCompletionsJsonResponseFormat deserializedChatCompletionsJsonResponseFormat
+                = new ChatCompletionsJsonResponseFormat();
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+                if ("type".equals(fieldName)) {
+                    String type = reader.getString();
+                    if (!"json_object".equals(type)) {
+                        throw new IllegalStateException(
+                            "'type' was expected to be non-null and equal to 'json_object'. The found 'type' was '"
+                                + type + "'.");
+                    }
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            return deserializedChatCompletionsJsonResponseFormat;
+        });
     }
 }

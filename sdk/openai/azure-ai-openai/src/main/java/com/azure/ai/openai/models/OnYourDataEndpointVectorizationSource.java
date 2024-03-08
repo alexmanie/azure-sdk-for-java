@@ -5,18 +5,16 @@ package com.azure.ai.openai.models;
 
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.azure.json.JsonReader;
+import com.azure.json.JsonToken;
+import com.azure.json.JsonWriter;
+import java.io.IOException;
 
 /**
  * The details of a a vectorization source, used by Azure OpenAI On Your Data when applying vector search, that is
  * based
  * on a public Azure OpenAI endpoint call for embeddings.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonTypeName("endpoint")
 @Immutable
 public final class OnYourDataEndpointVectorizationSource extends OnYourDataVectorizationSource {
 
@@ -26,15 +24,13 @@ public final class OnYourDataEndpointVectorizationSource extends OnYourDataVecto
      * query parameter is not allowed.
      */
     @Generated
-    @JsonProperty(value = "endpoint")
-    private String endpoint;
+    private final String endpoint;
 
     /*
      * Specifies the authentication options to use when retrieving embeddings from the specified endpoint.
      */
     @Generated
-    @JsonProperty(value = "authentication")
-    private OnYourDataAuthenticationOptions authentication;
+    private final OnYourDataAuthenticationOptions authentication;
 
     /**
      * Creates an instance of OnYourDataEndpointVectorizationSource class.
@@ -43,9 +39,7 @@ public final class OnYourDataEndpointVectorizationSource extends OnYourDataVecto
      * @param authentication the authentication value to set.
      */
     @Generated
-    @JsonCreator
-    public OnYourDataEndpointVectorizationSource(@JsonProperty(value = "endpoint") String endpoint,
-        @JsonProperty(value = "authentication") OnYourDataAuthenticationOptions authentication) {
+    public OnYourDataEndpointVectorizationSource(String endpoint, OnYourDataAuthenticationOptions authentication) {
         this.endpoint = endpoint;
         this.authentication = authentication;
     }
@@ -72,5 +66,50 @@ public final class OnYourDataEndpointVectorizationSource extends OnYourDataVecto
     @Generated
     public OnYourDataAuthenticationOptions getAuthentication() {
         return this.authentication;
+    }
+
+    @Override
+    public JsonWriter toJson(JsonWriter jsonWriter) throws IOException {
+        jsonWriter.writeStartObject();
+        jsonWriter.writeStringField("type", "endpoint");
+        jsonWriter.writeStringField("endpoint", this.endpoint);
+        jsonWriter.writeJsonField("authentication", this.authentication);
+        return jsonWriter.writeEndObject();
+    }
+
+    /**
+     * Reads an instance of OnYourDataEndpointVectorizationSource from the JsonReader.
+     *
+     * @param jsonReader The JsonReader being read.
+     * @return An instance of OnYourDataEndpointVectorizationSource if the JsonReader was pointing to an instance of it,
+     * or null if it was pointing to JSON null.
+     * @throws IllegalStateException If the deserialized JSON object was missing any required properties or the
+     * polymorphic discriminator.
+     * @throws IOException If an error occurs while reading the OnYourDataEndpointVectorizationSource.
+     */
+    public static OnYourDataEndpointVectorizationSource fromJson(JsonReader jsonReader) throws IOException {
+        return jsonReader.readObject(reader -> {
+            String endpoint = null;
+            OnYourDataAuthenticationOptions authentication = null;
+            while (reader.nextToken() != JsonToken.END_OBJECT) {
+                String fieldName = reader.getFieldName();
+                reader.nextToken();
+                if ("type".equals(fieldName)) {
+                    String type = reader.getString();
+                    if (!"endpoint".equals(type)) {
+                        throw new IllegalStateException(
+                            "'type' was expected to be non-null and equal to 'endpoint'. The found 'type' was '" + type
+                                + "'.");
+                    }
+                } else if ("endpoint".equals(fieldName)) {
+                    endpoint = reader.getString();
+                } else if ("authentication".equals(fieldName)) {
+                    authentication = OnYourDataAuthenticationOptions.fromJson(reader);
+                } else {
+                    reader.skipChildren();
+                }
+            }
+            return new OnYourDataEndpointVectorizationSource(endpoint, authentication);
+        });
     }
 }

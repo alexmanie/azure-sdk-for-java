@@ -142,7 +142,7 @@ public final class FunctionDefinition implements JsonSerializable<FunctionDefini
             }
             FunctionDefinition deserializedFunctionDefinition = new FunctionDefinition(name);
             deserializedFunctionDefinition.description = description;
-            deserializedFunctionDefinition.parameters = parameters;
+            deserializedFunctionDefinition.parameters = BinaryData.fromObject(parameters);
             return deserializedFunctionDefinition;
         });
     }

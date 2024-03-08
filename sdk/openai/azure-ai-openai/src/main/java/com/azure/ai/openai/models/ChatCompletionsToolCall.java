@@ -118,7 +118,7 @@ public class ChatCompletionsToolCall implements JsonSerializable<ChatCompletions
                     reader.skipChildren();
                 }
             }
-            return new ChatCompletionsToolCall(id);
+            return new ChatCompletionsToolCall(id, "function");
         });
     }
 }

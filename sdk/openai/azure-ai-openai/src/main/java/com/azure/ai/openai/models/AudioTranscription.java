@@ -141,7 +141,7 @@ public final class AudioTranscription implements JsonSerializable<AudioTranscrip
             String text = null;
             AudioTaskLabel task = null;
             String language = null;
-            Duration duration = null;
+            Double duration = null;
             List<AudioTranscriptionSegment> segments = null;
             while (reader.nextToken() != JsonToken.END_OBJECT) {
                 String fieldName = reader.getFieldName();
@@ -153,10 +153,7 @@ public final class AudioTranscription implements JsonSerializable<AudioTranscrip
                 } else if ("language".equals(fieldName)) {
                     language = reader.getString();
                 } else if ("duration".equals(fieldName)) {
-                    Double duration = reader.getNullable(JsonReader::getDouble);
-                    if (duration != null) {
-                        duration = Duration.ofNanos((long) (duration * 1000_000_000L));
-                    }
+                    duration = reader.getNullable(JsonReader::getDouble);
                 } else if ("segments".equals(fieldName)) {
                     segments = reader.readArray(reader1 -> AudioTranscriptionSegment.fromJson(reader1));
                 } else {
